@@ -1,0 +1,16 @@
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    background-color: gray;
+}
+#canvas {
+    background-color: white;
+    width: 1280px;
+    height: 820px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Press Start 2P', sans-serif;
+}
