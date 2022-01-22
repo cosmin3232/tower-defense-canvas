@@ -1,152 +1,35 @@
-import {UnitCardModel} from "./models/unit-card.model.js";
-import {collision, config, canvas, ctx, mouse} from './utils/utils.js';
+import {config, canvas, ctx, mouse} from './utils/utils.js';
 import {Defender} from "./classes/Defender.js";
-import {Cell} from "./classes/Cell.js";
-import {Resource} from "./classes/Resource.js";
+// import {Resource} from "./classes/Resource.js";
 import {FloatingMessage} from "./classes/FloatingMessage.js";
 import {Enemy} from "./classes/Enemy.js";
-import {Projectile} from "./classes/Projectile";
 import {enemies as allEnemies} from "./minions/enemies.js";
+import {defenders as allDefenders} from "./minions/defenders.js";
+import {Game} from "./classes/Game.js";
 
 const cellSize: number = config.cellSize;
 const cellGap: number = config.cellGap;
 const winningScore: number = config.winningScore;
-const gameGrid: Array<Cell> = config.gameGrid;
 const defenders: Array<Defender> = config.defenders;
 const enemies: Array<Enemy> = config.enemies;
 const enemiesPositions: Array<number> = config.enemiesPositions;
-const projectiles: Array<Projectile> = config.projectiles;
-const resources: Array<Resource> = config.resources;
+// const resources: Array<Resource> = config.resources;
 let enemiesInterval: number = config.enemiesInterval;
 let numberOfResources: number = config.numberOfResources;
 let score: number = config.score;
 let gameOver: boolean = config.gameOver;
-let chosenDefender: number = config.chosenDefender;
-const cellClass: Cell = new Cell(canvas.width, canvas.height);
+const game = new Game();
 
 const controlsBar = {
     width: canvas.width,
     height: 100,
 }
 
-canvas.addEventListener('mousedown', function() {
-    mouse.clicked = true;
-});
+game.mouseDown();
+game.mouseUp();
 
-canvas.addEventListener('mouseup', function() {
-    mouse.clicked = false;
-});
-
-let canvasPosition = canvas.getBoundingClientRect();
-canvas.addEventListener('mousemove', function(e: MouseEvent) {
-    mouse.x = e.x - canvasPosition.left;
-    mouse.y = e.y - canvasPosition.top;
-});
-canvas.addEventListener('mouseleave', function() {
-    mouse.x = undefined;
-    mouse.y = undefined;
-});
-
-function handleGameGrid(): void {
-    for (let i = 0; i < gameGrid.length; i++) {
-        gameGrid[i].draw();
-    }
-}
-
-function handleProjectiles(): void {
-    for (let i = 0; i < projectiles.length; i++) {
-        projectiles[i].update();
-        projectiles[i].draw();
-
-        for (let j = 0; j < enemies.length; j++) {
-            if (enemies[j] && projectiles[i] && collision(projectiles[i], enemies[j])) {
-                enemies[j].health -= projectiles[i].power;
-                projectiles.splice(i, 1);
-                i--;
-            }
-        }
-
-        if (projectiles[i] && projectiles[i].x > canvas.width - cellSize) {
-            projectiles.splice(i, 1);
-            i--;
-        }
-    }
-}
-
-const defender1: HTMLImageElement = new Image();
-defender1.src = './images/vikingi.png';
-config.defenderTypes.push(defender1);
-
-const defender2: HTMLImageElement = new Image();
-defender2.src = './images/vikingi2.jpg';
-config.defenderTypes.push(defender2);
-
-
-function handleDefenders(): void {
-    for (let i = 0; i < defenders.length; i++) {
-
-        defenders[i].draw();
-        defenders[i].update();
-
-        defenders[i].shooting = enemiesPositions.indexOf(defenders[i].y) !== -1;
-
-        for (let j = 0; j < enemies.length; j++) {
-            if (defenders[i] && defenders[i].health <= 0) {
-                defenders.splice(i, 1);
-                i--;
-                enemies[j].movement = enemies[j].speed;
-            }
-        }
-    }
-}
-
-const card1: UnitCardModel = {
-    x: 10,
-    y: 10,
-    width: 194/2,
-    height: 194/2,
-}
-const card2: UnitCardModel = {
-    x: 120,
-    y: 10,
-    width: 194/2,
-    height: 194/2,
-}
-
-
-function chooseDefender(): void {
-    let card1Stroke: string;
-    let card2Stroke: string;
-
-    if (collision(mouse, card1) && mouse.clicked) {
-        chosenDefender = 1;
-    } else if (collision(mouse, card2) && mouse.clicked) {
-        chosenDefender = 2;
-    }
-
-    if (chosenDefender === 1) {
-        card1Stroke = 'gold';
-        card2Stroke = 'black';
-    } else if (chosenDefender === 2) {
-        card1Stroke = 'black';
-        card2Stroke = 'gold';
-    } else {
-        card1Stroke = 'black';
-        card2Stroke = 'black';
-    }
-
-    ctx.lineWidth = 1;
-    ctx.fillStyle = 'rgba(0,0,0,0.2)';
-    ctx.fillRect(card1.x, card1.y, card1.width, card1.height);
-    ctx.strokeStyle = card1Stroke;
-    ctx.strokeRect(card1.x, card1.y, card1.width, card1.height);
-    ctx.drawImage(defender1, 0, 0, 300, 240, card1.x, card1.y, card1.width, card1.height);
-    ctx.fillRect(card2.x, card2.y, card2.width, card2.height);
-    ctx.strokeStyle = card2Stroke;
-    ctx.strokeRect(card2.x, card2.y, card2.width, card2.height);
-    ctx.drawImage(defender2, 0, 0, 300, 240, card2.x, card2.y, card2.width, card2.height);
-
-}
+game.mouseMove();
+game.mouseLeave();
 
 const floatingMessages: Array<FloatingMessage> = config.floatingMessages;
 
@@ -210,10 +93,10 @@ function handleEnemies(): void {
             i--;
         }
     }
-    if (config.frame % enemiesInterval === 0 && score < winningScore && enemies.length < 5) {
+    if (config.frame % enemiesInterval === 0 && score < winningScore && enemies.length < 10) {
         const verticalPosition: number = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
         const randomArray = Math.floor(Math.random() * allEnemies.length);
-        enemies.push(new Enemy(
+        enemies.push(new Enemy(260, 750,
             allEnemies[randomArray].type,
             allEnemies[randomArray].name,
             allEnemies[randomArray].health,
@@ -222,6 +105,21 @@ function handleEnemies(): void {
         ));
         enemiesPositions.push(verticalPosition);
         if (enemiesInterval > 120) enemiesInterval -= 50;
+    }
+}
+
+function handleDefenders(): void {
+    for (let i = 0; i < defenders.length; i++) {
+        const towerRange: number = defenders[i].range;
+        defenders[i].draw();
+
+        for (let j = 0; j < enemies.length; j++) {
+            const distance = Math.abs(enemies[j].x - (defenders[i].x || 0)) + Math.abs(enemies[j].y - (defenders[i].y || 0));
+            if (distance < towerRange) {
+                defenders[i].shoot(enemies[j]);
+                break;
+            }
+        }
     }
 }
 // function handleResources(): void {
@@ -240,29 +138,12 @@ function handleEnemies(): void {
 //     }
 // }
 
-function handleGameStatus(): void {
-    ctx.fillStyle = 'red';
-    ctx.font = '30px Gope';
-    ctx.fillText(`Score: ${numberOfResources}   Resources: ${numberOfResources}   Total HP: ${config.totalHP}`, 230, 60);
-    if (gameOver) {
-        ctx.fillStyle = 'black';
-        ctx.font = '60px Gope';
-        ctx.fillText('Game Over', 135, 530);
-    }
-    if (score >= winningScore && enemies.length === 0) {
-        ctx.fillStyle = 'black';
-        ctx.fonnt = '60px Gope';
-        ctx.fillText('Level completed', 130, 530);
-        ctx.font = '30px Gope';
-        ctx.fillText('You win with: ' + score + ' points', 134, 570);
-    }
-}
+canvas.addEventListener('mousedown', function () {
+    const mouseX = mouse.x || 0;
+    const mouseY = mouse.y || 0;
 
-canvas.addEventListener('click', function () {
-    // @ts-ignore
-    const gridPositionX: number = mouse.x - (mouse.x % cellSize) + cellGap;
-    // @ts-ignore
-    const gridPositionY: number = mouse.y - (mouse.y % cellSize) + cellGap;
+    const gridPositionX: number = mouseX - (mouseX % cellSize);
+    const gridPositionY: number = mouseY - (mouseY % cellSize);
     if (gridPositionY < cellSize) return;
     for (let i = 0;  i < defenders.length; i++) {
         if (defenders[i].x === gridPositionX && defenders[i].y === gridPositionY) {
@@ -270,8 +151,10 @@ canvas.addEventListener('click', function () {
         }
     }
     const defenderCost = 100;
-    if (numberOfResources >= defenderCost && cellClass.get(1, 3) !== 1) {
-        defenders.push(new Defender(gridPositionX, gridPositionY));
+    const randomArray = Math.floor(Math.random() * allDefenders.length);
+    if (numberOfResources >= defenderCost) {
+        defenders.push(new Defender(gridPositionX, gridPositionY, randomArray));
+        console.log(defenders);
         numberOfResources -= defenderCost;
     } else {
         if (mouse.x != null && mouse.y != null) {
@@ -291,58 +174,15 @@ function drawMap(): void {
 drawMap();
 
 function animate(): void {
-    handleGameGrid();
-    handleDefenders();
     // handleResources();
-    handleProjectiles();
     handleEnemies();
-    handleGameStatus();
+    handleDefenders();
+    game.handleGameStatus();
     handleFloatingMessages();
-    chooseDefender();
     config.frame++;
     if (!gameOver) requestAnimationFrame(animate);
 }
 animate();
 
-function createGrid(): void {
-    // for (let y = cellSize; y < canvas.height; y += cellSize) {
-    //     for (let x = 0; x < canvas.width; x += cellSize) {
-    //         gameGrid.push(new Cell(x, y, canvas.width, canvas.height));
-    //     }
-    // }
-    // cellClass.draw();
-    // const vvv = cellClass.set(2, 12, 1);
-    // console.log(vvv);
-    // const testThing: number = cellClass.get(1, 3);
-    ctx.beginPath();
-    for (let x = 0; x <= canvas.width; x+=cellSize) {
-        for (let y = 0; y <= canvas.height; y+=cellSize) {
-            ctx.fillStyle = 'black';
-            ctx.font = '10px Arial';
-            ctx.fillText(`${x} si ${y}`, x, y);
-        }
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-    }
 
-    ctx.strokeStyle = 'rgb(255,0,0)';
-    ctx.lineWidth = 1;
-
-    ctx.stroke();
-
-    ctx.beginPath();
-    for (let y = 0; y <= canvas.height; y+=cellSize) {
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-    }
-
-    ctx.strokeStyle = 'rgb(20,20,20)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    requestAnimationFrame(createGrid);
-}
-createGrid();
-
-window.addEventListener('resize', function() {
-    canvasPosition = canvas.getBoundingClientRect();
-});
+game.resizeCanvasOnBrowserResize();

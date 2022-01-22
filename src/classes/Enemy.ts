@@ -1,4 +1,4 @@
-import {config, canvas, ctx} from "../utils/utils.js";
+import {config, ctx} from "../utils/utils.js";
 import {EnemyImagesModel} from "../models/enemy-images.model.js";
 
 export class Enemy {
@@ -22,9 +22,9 @@ export class Enemy {
     public actualDirection: string;
 
 
-    constructor(type: string, name: string, health: number, speed: number, enemyDirection: EnemyImagesModel) {
-        this.x = 260;
-        this.y = 750;
+    constructor(x: number, y: number, type: string, name: string, health: number, speed: number, enemyDirection: EnemyImagesModel) {
+        this.x = x;
+        this.y = y;
         this.type = type;
         this.name = name;
         this.width = 100 - config.cellGap * 2;
@@ -54,6 +54,6 @@ export class Enemy {
         ctx.drawImage(enemyImage, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
         ctx.fillStyle = 'black';
         ctx.font = '20px Gope';
-        ctx.fillText(`${this.name} (${this.health})`, this.x - 10, this.y + 25);
+        ctx.fillText(`${this.name} (${Math.round(this.health)})`, this.x - 10, this.y + 25);
     }
 }

@@ -1,7 +1,5 @@
-import {Cell} from "../classes/Cell.js";
 import {Defender} from "../classes/Defender.js";
 import {Enemy} from "../classes/Enemy.js";
-import {Projectile} from "../classes/Projectile.js";
 import {Resource} from "../classes/Resource.js";
 import {FloatingMessage} from "../classes/FloatingMessage.js";
 
@@ -10,11 +8,9 @@ export interface ConfigModel {
     cellSize: number;
     cellGap: number;
     winningScore: number;
-    gameGrid: Array<Cell>;
     defenders: Array<Defender>;
     enemies: Array<Enemy>;
     enemiesPositions: Array<number>;
-    projectiles: Array<Projectile>;
     resources: Array<Resource>;
     enemiesInterval: number;
     numberOfResources: number;

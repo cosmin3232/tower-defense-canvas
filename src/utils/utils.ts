@@ -14,19 +14,22 @@ export const mouse: MouseModel = {
     clicked: false,
 }
 
+export const controlsBar = {
+    width: canvas.width,
+    height: 100,
+}
+
 export const config: ConfigModel = {
     totalHP: 1000,
     cellSize: 200,
     cellGap: 3,
     winningScore: 50,
-    gameGrid: [],
     defenders: [],
     enemies: [],
     enemiesPositions: [],
-    projectiles: [],
     resources: [],
     enemiesInterval: 600,
-    numberOfResources: 300,
+    numberOfResources: 3000,
     frame: 0,
     score: 0,
     gameOver: false,

@@ -10,7 +10,7 @@ export const enemies = [
             down: './images/goblin2_down.png',
             right: './images/goblin2_right.png',
         },
-        attack: 20
+        attack: 20,
     },
     {
         type: 'primary-goblin',
