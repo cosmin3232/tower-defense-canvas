@@ -1,7 +1,8 @@
 import { config, ctx } from "../utils/utils.js";
 export class Enemy {
     constructor(x, y, type, name, health, speed, enemyDirection) {
-        this.x = x;
+        this.randomNumber = Math.floor(Math.random() * 50);
+        this.x = x + this.randomNumber;
         this.y = y;
         this.type = type;
         this.name = name;

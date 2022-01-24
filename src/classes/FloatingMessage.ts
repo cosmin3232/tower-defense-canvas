@@ -19,7 +19,7 @@ export class FloatingMessage {
         this.opacity = 1;
     }
     public update(): void {
-        this.y -= 0.3;
+        this.y -= 0.1;
         this.lifeSpan += 1;
         if (this.opacity > 0.03) this.opacity -= 0.03;
     }

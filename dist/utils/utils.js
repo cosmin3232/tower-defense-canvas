@@ -1,7 +1,7 @@
 export const canvas = document.getElementById('canvas');
 export const ctx = canvas.getContext('2d');
 canvas.width = 1280;
-canvas.height = 820;
+canvas.height = 720;
 export const mouse = {
     x: 10,
     y: 10,
@@ -9,21 +9,18 @@ export const mouse = {
     height: 0.1,
     clicked: false,
 };
-export const controlsBar = {
-    width: canvas.width,
-    height: 100,
-};
 export const config = {
     totalHP: 1000,
-    cellSize: 200,
+    cellSize: 10,
     cellGap: 3,
     winningScore: 50,
     defenders: [],
     enemies: [],
     enemiesPositions: [],
+    bullets: [],
     resources: [],
-    enemiesInterval: 600,
-    numberOfResources: 3000,
+    enemiesInterval: 60,
+    numberOfResources: 300,
     frame: 0,
     score: 0,
     gameOver: false,

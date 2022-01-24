@@ -2,6 +2,7 @@ import {Defender} from "../classes/Defender.js";
 import {Enemy} from "../classes/Enemy.js";
 import {Resource} from "../classes/Resource.js";
 import {FloatingMessage} from "../classes/FloatingMessage.js";
+import {Bullet} from "../classes/Bullet.js";
 
 export interface ConfigModel {
     totalHP: number;
@@ -11,6 +12,7 @@ export interface ConfigModel {
     defenders: Array<Defender>;
     enemies: Array<Enemy>;
     enemiesPositions: Array<number>;
+    bullets: Array<Bullet>;
     resources: Array<Resource>;
     enemiesInterval: number;
     numberOfResources: number;

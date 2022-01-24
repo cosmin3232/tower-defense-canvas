@@ -20,10 +20,11 @@ export class Enemy {
     public spriteWidth: number;
     public spriteHeight: number;
     public actualDirection: string;
+    public randomNumber: number = Math.floor(Math.random() * 50);
 
 
     constructor(x: number, y: number, type: string, name: string, health: number, speed: number, enemyDirection: EnemyImagesModel) {
-        this.x = x;
+        this.x = x + this.randomNumber;
         this.y = y;
         this.type = type;
         this.name = name;

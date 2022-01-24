@@ -4,13 +4,17 @@ html, body {
     overflow: hidden;
     background-color: gray;
 }
+.container {
+    display: flex;
+}
+.container #container__stats p {
+    font-family: 'Gope', sans-serif;
+    font-weight: bold;
+    padding: 0 15px;
+}
 #canvas {
     background-color: white;
     width: 1280px;
-    height: 820px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    height: 720px;
     font-family: 'Press Start 2P', sans-serif;
 }
